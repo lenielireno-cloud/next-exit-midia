@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="root"></div>
+<script src="lib.js"></script><script src="TLFILE"></script><script>
+function room(){return `<div style="position:absolute;inset:0;background:linear-gradient(#EAF2EE,#d9e6df)"></div>
+ <div style="position:absolute;left:600px;top:760px;width:380px;height:230px;background:${G};border:10px solid #fff;outline:6px solid #8a6a4a;border-radius:20px;color:#fff;text-align:center;padding-top:40px">
+  <div style="font:700 34px Overpass;letter-spacing:4px">NEXT EXIT</div><div style="font:900 70px/1 Overpass">English ↗</div></div>
+ <div style="position:absolute;left:80px;top:780px;width:200px;height:300px;background:#cfe8f5;border:10px solid #fff;outline:4px solid #8a6a4a"></div>
+ <div style="position:absolute;left:0;right:0;top:1400px;bottom:0;background:#c99a6a"></div>
+ <div style="position:absolute;left:640px;top:1150px;width:340px;height:250px;background:#2C4A9A;border-radius:30px 30px 0 0;border:6px solid ${INK}"></div>`}
+const PH='<rect x="146" y="270" width="34" height="56" rx="6" fill="#222" stroke="#13201B" stroke-width="4"/>';
+function cur(t,k){return TL.ev.filter(e=>e.k===k&&t>=e.s&&t<e.e)[0]}
+function render(t){
+  const E=TL.ev, last=k=>E.filter(e=>e.k===k).slice(-1)[0];
+  const zoom=E.find(e=>e.k==='zoom'), outro=E.find(e=>e.k==='outro'), end=E.find(e=>e.k==='end');
+  let h='';
+  if(t<zoom.s || (t>=outro.s&&t<end.s)){
+    const ev=cur(t,'intro')||cur(t,'outro')||last(t<zoom.s?'intro':'outro');
+    const talking=E.some(e=>(e.k==='intro'||e.k==='outro')&&t>=e.s&&t<e.e-0.3);
+    h+=room()+person({...LEO,talk:talking,wave:t<2.5||(t>=outro.s&&t<outro.s+1.5),item:PH},t,250,760,820);
+    if(ev) h+=`<div class="card" style="top:230px;text-align:center;transform:scale(${pop(io(t,ev.s,0.3))})"><div style="font:800 58px/1.3 Brico">${ev.cap}</div></div>`;
+  } else if(t<end.s){
+    const z=ease(io(t,zoom.s,0.8));
+    // state of phone
+    let ci=0,prog=0,typo=null,done=0;
+    E.filter(e=>e.k==='type').forEach(e=>{if(t>=e.s){ci=e.i;prog=C(0,TL.lines[e.i].en.length,(t-e.s)*14);typo=e.typo!=null?{i:e.i,at:e.typo,len:5}:null; if(t>=e.e)ci=e.i+1,prog=0}});
+    const d=E.find(e=>e.k==='done'); if(t>=d.s){ci=TL.lines.length;done=io(t,d.s,0.4)}
+    const tap=cur(t,'tap'), li=cur(t,'listen');
+    h+=`<div style="position:absolute;inset:0;background:#F3F5F4;opacity:${z}"></div><div style="opacity:${z};transform:scale(${0.7+0.3*z});transform-origin:540px 1000px">`+
+      phone(t,150,330,1.5,'💼 '+TL.lesson,TL.lines,ci,prog,{typo,done,tap:tap?io(t,tap.s,0.6):0,tapY:tap?140+tap.i*150:200})+'</div>';
+    const tv=E.filter(e=>(e.k==='type'||e.k==='done')&&e.sub&&t>=e.s&&t<e.s+4).slice(-1)[0];
+    const top = li? `<span style="color:${G}">🔊 ouvindo…</span>` : tv? tv.sub : '';
+    if(top) h+=`<div class="abs big" style="top:170px;font-size:48px">${top}</div>`;
+  } else h=endcard(t,end.s);
+  document.getElementById('root').innerHTML=brand('O APP ✍️')+h;
+}
+window.DUR=TL.dur;render(0);
+</script></body></html>

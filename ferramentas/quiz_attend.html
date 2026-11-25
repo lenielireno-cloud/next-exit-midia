@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="root"></div>
+<script src="lib.js"></script><script>
+const Q={word:'ATTEND',opts:[['A','Atender'],['B','Comparecer'],['C','Entender']],ok:1};
+function render(t){
+  let h=brand('QUIZ #12');
+  if(t<4.4){
+    h+=cap(t,0,'Seu chefe nos EUA diz:',240,64);
+    h+=person({...CAIO,talk:0},t,120,820,640)+person({skin:'#F1C9A5',hairStyle:'bald',glasses:1,mustache:1,item:'<path d="M100 188 l-10 14 l10 70 l10 -70z" fill="#E5482F" stroke="#13201B" stroke-width="4"/>',shirt:'#fff',pants:'#333',talk:t>0.8,ph:3},t,640,800,660,true);
+    h+=balloon(t,0.8,380,470,620,'Mr. Parker','“You need to <span style="color:#E5482F">attend</span> the meeting.”','','right');
+    h+=cap(t,2.6,'E agora? 😳',1520,66);
+  } else if(t<17.2){
+    h+=cap(t,4.2,'Você sabe a tradução de…',230,64);
+    h+=`<div class="abs big" style="top:390px;font-family:Overpass;font-weight:900;font-size:150px;color:${R};transform:scale(${pop(io(t,4.4,0.5))})">${Q.word}?</div>`;
+    let hi=(t>=12.4&&t<14.6)?Math.floor((t-12.4)/0.3)%3:-1; const rev=t>=14.6;
+    Q.opts.forEach((o,i)=>{const a=io(t,5.4+i*0.5,0.35);let st='';
+      if(hi===i)st='border-color:#FFC21A;box-shadow:0 10px 0 #e0a800;background:#fff8e0';
+      if(rev&&i===Q.ok)st='border-color:#0B6B47;background:#e3f4ec;box-shadow:0 10px 0 #0B6B47';
+      h+=`<div class="opt" style="top:${700+i*190}px;opacity:${rev&&i!==Q.ok?0.35:a};transform:translateX(${(1-ease(a))*-80}px);${st}"><b>${o[0]}</b>${o[1]}${rev&&i===Q.ok?' ✅':''}</div>`});
+    if(t>=6.8&&t<12.4){const k=Math.floor((t-6.8)/1.8),f=((t-6.8)%1.8)/1.8;h+=`<div class="abs" style="top:1260px;text-align:center;font:900 260px Overpass;color:${R};transform:scale(${pop(f*2.2)});opacity:${1-C(0,1,(f-0.75)*4)}">${3-k}</div>`}
+    if(t>=12.4&&t<14.6)h+=cap(t,12.4,'E a resposta é…',1300,72);
+    if(rev)h+=`<div class="abs big" style="top:1290px;font-size:76px;color:${G};transform:scale(${pop(io(t,14.8))})">ATTEND = COMPARECER</div>`;
+  } else if(t<23){
+    h+=cap(t,17.2,'⚠️ A pegadinha',220,74);
+    h+=cap(t,17.6,'Parece <span style="color:#E5482F">“atender”</span>…<br>mas é <span style="color:#0B6B47">comparecer, participar!</span>',360,58);
+    const b=io(t,19,0.4);
+    h+=`<div class="card" style="top:720px;opacity:${b};text-align:center"><div style="font:800 50px Brico">📞 Atender o telefone</div><div style="font:700 60px Mono;color:${G};margin-top:14px">answer the phone</div></div>`;
+    const c=io(t,20.4,0.4);
+    h+=`<div class="card" style="top:1040px;opacity:${c};text-align:center"><div style="font:800 50px Brico">🛎️ Atender o cliente</div><div style="font:700 60px Mono;color:${G};margin-top:14px">help / serve the customer</div></div>`;
+  } else if(t<28.5){
+    h+=cap(t,23,'Na prática 👇',240,70);
+    const s="I'll attend the meeting at 3.",n=Math.floor(C(0,s.length,(t-23.6)*14));
+    h+=`<div class="card" style="top:520px;opacity:${io(t,23)}"><div style="font:800 40px Brico;color:${G};margin-bottom:18px">🇺🇸 Inglês</div><div style="font:700 56px Mono">${s.slice(0,n)}<span style="color:${G}">${n<s.length&&Math.floor(t*2.5)%2?'|':'&nbsp;'}</span></div>
+      <div style="font:700 48px Atk;color:${B};margin-top:18px;opacity:${io(t,25.6)}">Vou participar da reunião às 3.</div></div>`;
+    h+=`<div class="card" style="top:1060px;opacity:${io(t,26.2)};text-align:center"><div class="big" style="font-size:52px;padding:0">Você conhecia essa? Conta aqui 👇</div></div>`;
+  } else h=endcard(t,28.5);
+  document.getElementById('root').innerHTML=h;
+}
+window.DUR=32;render(0);
+</script></body></html>

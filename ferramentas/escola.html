@@ -1,0 +1,22 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="root"></div>
+<script src="lib.js"></script><script>
+const P=[["How's it going?","Pretty good!","E aí, como vai? / Tudo certo!"],["What's up?","Not much!","E aí? / Nada demais!"],["How are you doing?","Can't complain!","Como você tá? / Não posso reclamar!"],["How have you been?","Good, just busy!","Como tem passado? / Bem, só corrido!"]];
+function render(t){
+  let h=brand('ESCOLA × EUA');
+  if(t<5.5){
+    h+=cap(t,0.2,'Na escola você aprendeu assim 👇',240,62);
+    h+=`<div class="card" style="top:480px;text-align:center;opacity:${io(t,0.8)}"><div style="font:800 40px Brico;color:#5E6E67">📚 Escola</div><div style="font:700 56px/1.4 Mono;margin-top:12px">— How are you?<br>— I'm fine, thank you.<br>And you?</div></div>`;
+    h+=cap(t,3,'Mas o americano<br>quase não fala assim! 😅',1080,64,R);
+  } else if(t<25.5){
+    const i=Math.floor((t-5.5)/5), s=5.5+i*5, p=P[i];
+    h+=cap(t,s,`🇺🇸 Como o americano fala <span style="color:#0B6B47">(${i+1}/4)</span>`,230,54);
+    h+=`<div class="card" style="top:430px;text-align:center;transform:scale(${pop(io(t,s+0.2,0.35))})"><div style="font:700 66px Mono;color:${G}">${p[0]}</div></div>`;
+    h+=`<div class="card" style="top:700px;text-align:center;opacity:${io(t,s+1.6)};transform:scale(${pop(io(t,s+1.6,0.35))})"><div style="font:800 34px Brico;color:#5E6E67">Resposta</div><div style="font:700 66px Mono;color:${B}">${p[1]}</div></div>`;
+    h+=`<div class="abs big" style="top:1040px;font-size:46px;color:#5E6E67;opacity:${io(t,s+2.8)}">${p[2]}</div>`;
+  } else if(t<29.5){
+    h+=cap(t,25.5,'Salva e manda pro amigo<br>que ainda responde<br><span style="color:#E5482F">“I’m fine, thank you, and you?”</span> 😂',420,60);
+  } else h=endcard(t,29.5);
+  document.getElementById('root').innerHTML=h;
+}
+window.DUR=33;render(0);
+</script></body></html>

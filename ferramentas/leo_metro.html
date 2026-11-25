@@ -1,0 +1,43 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="root"></div>
+<script src="lib.js"></script><script>
+function subway(t){
+  const off=(t*260)%400;
+  return `<div style="position:absolute;inset:0;background:#d9dde0"></div>
+  <div style="position:absolute;left:0;right:0;top:420px;height:360px;background:#2b3036"></div>
+  ${[0,1,2,3].map(i=>`<div style="position:absolute;top:460px;left:${i*400-off+40}px;width:300px;height:260px;background:#1a1d22;border:10px solid #9aa3ab;border-radius:30px;overflow:hidden">
+     <div style="position:absolute;left:${-off}px;top:120px;width:2000px;height:16px;background:repeating-linear-gradient(90deg,#ffd76a 0 40px,transparent 40px 160px)"></div></div>`).join('')}
+  <div style="position:absolute;left:0;right:0;top:780px;height:24px;background:#ffcc00"></div>
+  <div style="position:absolute;left:60px;top:840px;padding:10px 24px;background:#fff;border:4px solid #333;border-radius:12px;font:900 40px Overpass">
+   <span style="display:inline-block;width:56px;height:56px;border-radius:50%;background:#A7A9AC;color:#fff;text-align:center;line-height:58px;margin-right:12px">L</span>to Brooklyn</div>
+  <div style="position:absolute;left:0;right:0;top:1360px;height:120px;background:#3E7CC0;border-top:8px solid #2a5a90"></div>
+  <div style="position:absolute;left:0;right:0;top:1480px;height:440px;background:#8f969c"></div>
+  <div style="position:absolute;left:940px;top:300px;width:16px;height:1060px;background:#c8ccd0;border:3px solid #888"></div>`;
+}
+const LINES=[{who:'Você',en:'Excuse me, which train goes to Brooklyn?',pt:'Com licença, qual trem vai para o Brooklyn?'},
+ {who:'Moça',en:'Take the L train.',pt:'Pegue o trem L.'},
+ {who:'Você',en:'Do I need to transfer?',pt:'Eu preciso fazer baldeação?'},
+ {who:'Moça',en:'No, it goes straight there.',pt:'Não, ele vai direto.'}];
+function render(t){
+  let h='';
+  if(t<7.5){
+    h+=subway(t)+person({...LEO,talk:t>0.6&&t<6,item:'<rect x="146" y="270" width="34" height="56" rx="6" fill="#222" stroke="#13201B" stroke-width="4"/>'},t,375,700,760);
+    h+=balloon(t,0.6,90,240,900,'Léo','Oi, amigos! 👋 Tô no metrô de Nova York…','',"left");
+    if(t>3.2) h=h.replace('Oi, amigos! 👋 Tô no metrô de Nova York…','…e vou usar esse tempinho pra praticar meu inglês. Vem ver! 📱');
+  } else if(t<30){
+    const z=ease(io(t,7.5,0.8));
+    h+=`<div style="position:absolute;inset:0;background:#F3F5F4;opacity:${z}"></div>`;
+    // typing schedule
+    const plan=[[9,0],[13.5,1],[16.5,2],[20,3]]; let cur=0,prog=0;
+    plan.forEach(([s,i])=>{if(t>=s){cur=i;prog=C(0,LINES[i].en.length,(t-s)*13)}});
+    if(t>=23.5){cur=4}
+    const tap=t>=24&&t<26.2?io(t,24,0.6):0, done=t>=27?io(t,27,0.4):0;
+    h+=`<div style="opacity:${z}">${phone(t,150,300,1.5,'No metrô',LINES,cur,prog,{typo:{i:0,at:12,len:3},tap,tapY:560,done})}</div>`;
+    h+= (t>=24&&t<27)? `<div class="abs big" style="top:180px;font-size:52px;color:${G}">🔊 ouvindo… “Do I need to transfer?”</div>` : `<div class="abs big" style="top:180px;font-size:56px;opacity:${io(t,8)}">Digita e a tradução aparece na hora ✍️</div>`;
+  } else if(t<35){
+    h+=subway(t)+person({...LEO,talk:t<33.5,wave:1},t,375,700,760);
+    h+=balloon(t,30.2,90,240,900,'Léo','Viu como é fácil? 😄 5 minutinhos no metrô já valem!','',"left");
+  } else h=endcard(t,35);
+  document.getElementById('root').innerHTML=brand('NO METRÔ 🚇')+h;
+}
+window.DUR=39;render(0);
+</script></body></html>

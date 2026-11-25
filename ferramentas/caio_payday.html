@@ -1,0 +1,43 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="root"></div>
+<script src="lib.js"></script><script>
+function dinerNight(){
+  return `<div style="position:absolute;inset:0;background:#2b2440"></div>
+  <div style="position:absolute;left:0;right:0;top:560px;height:900px;background:linear-gradient(#f3d6b0,#e6bf8f)"></div>
+  <div style="position:absolute;left:0;right:0;top:560px;height:60px;background:repeating-linear-gradient(90deg,#E5482F 0 60px,#fff 60px 120px)"></div>
+  <div style="position:absolute;left:60px;top:660px;width:300px;height:200px;background:#1a1f3a;border:10px solid #8a5a3a;border-radius:10px"><div style="position:absolute;right:30px;top:24px;width:44px;height:44px;border-radius:50%;background:#fff6c8"></div></div>
+  <div style="position:absolute;left:420px;top:660px;font:900 64px Overpass;color:#ff6a6a;text-shadow:0 0 22px #ff3b3b">DINER</div>
+  <div style="position:absolute;left:0;right:0;top:1460px;height:460px;background:repeating-conic-gradient(#222 0 25%,#eee 0 50%) 0 0/120px 120px"></div>`;
+}
+const PK={skin:'#F1C9A5',hairStyle:'bald',glasses:1,mustache:1,shirt:'#fff',pants:'#333',ph:3,item:'<path d="M100 188 l-10 14 l10 70 l10 -70z" fill="#E5482F" stroke="#13201B" stroke-width="4"/>'};
+const env='<rect x="140" y="280" width="70" height="46" rx="4" fill="#f6f0dc" stroke="#13201B" stroke-width="4"/><path d="M140 282 l35 22 l35 -22" fill="none" stroke="#13201B" stroke-width="3"/>';
+function render(t){
+  let h='';
+  const B=(s,e,x,n,en,pt,side)=>t>=s&&t<e?balloon(t,s,x,240,720,n,en,pt,side):'';
+  const tk=(a,b)=>t>a+0.3&&t<b-0.6;
+  if(t<16.5||(t>=23&&t<31.5)){
+    h+=dinerNight();
+    const parkIn=t>=8.5&&t<16.5, px=parkIn?1100-C(0,1,(t-8.5)/1.2)*450:2000;
+    const jump=(t>4&&t<8)?Math.abs(Math.sin((t-4)*5))*-60:0;
+    if(parkIn) h+=person({...PK,talk:tk(8.5,13),item:PK.item+(t<13.4?env:'')},t,px,740,700,true);
+    else h+=person({...MAYA,talk:tk(2,4)||tk(23,27.5)},t,640,760,680,true);
+    h+=`<div style="position:absolute;left:0;top:${jump}px;width:1080px;height:1920px">${person({...CAIO,talk:tk(4,8.5)||tk(13,16.5)||tk(27.5,31.5),wave:t>4&&t<8,item:(t>=13.4&&t<31.5)?env:''},t,140,740,700)}</div>`;
+    if(t<2) h+=cap(t,0.2,'Caio · <span style="color:#FFC21A">Ep. 4: Payday 💵</span>',230,62,'#fff');
+    h+=B(2,4,300,'Maya','Caio! It’s payday!','Caio! Hoje é dia de pagamento!','right');
+    h+=B(4,8.5,60,'Caio','Payday? Seriously?! 🤩','Dia de pagamento? Sério?!','left');
+    h+=B(8.5,13,300,'Mr. Parker','Here’s your paycheck. Good job this week!','Aqui está seu pagamento. Bom trabalho essa semana!','right');
+    h+=B(13,16.5,60,'Caio','Thank you, Mr. Parker!','Obrigado, Sr. Parker!','left');
+    h+=B(23,27.5,300,'Maya','So… it’s on you today! 😏','Então… hoje é por sua conta!','right');
+    h+=B(27.5,31.5,60,'Caio','Okay… coffee’s on me! ☕','Tá bom… o café é por minha conta!','left');
+  } else if(t<23){
+    h+=cap(t,16.5,'📄 O que vem no <span style="color:#0B6B47">paycheck</span>?',230,64);
+    const rows=[['Hours','horas trabalhadas'],['Overtime','hora extra'],['Tips','gorjetas'],['Taxes','impostos'],['Net pay','valor que cai na conta']];
+    h+=`<div class="card" style="top:430px;border:6px solid ${INK};background:#fffdf3"><div style="font:900 56px Overpass;color:${G};margin-bottom:14px">PAYCHECK · Caio</div>${rows.map((r,i)=>`<div style="display:flex;justify-content:space-between;padding:20px 0;border-top:2px dashed #ccc;opacity:${io(t,17.2+i*0.9)}"><span style="font:700 52px Mono">${r[0]}</span><span style="font:700 42px Atk;color:${B}">${r[1]}</span></div>`).join('')}</div>`;
+  } else if(t<35){
+    h+=cap(t,31.5,'💡 Anota essa:',320,70);
+    h+=`<div class="card" style="top:560px;text-align:center;opacity:${io(t,32)}"><div style="font:700 64px Mono;color:${G}">It’s on me!</div><div style="font:700 50px Atk;color:${B};margin-top:14px">É por minha conta!</div></div>`;
+    h+=`<div class="card" style="top:920px;text-align:center;opacity:${io(t,32.8)}"><div style="font:700 64px Mono;color:${G}">It’s on you!</div><div style="font:700 50px Atk;color:${B};margin-top:14px">É por sua conta!</div></div>`;
+  } else h=endcard(t,35,'Quer praticar com o Caio?<br>Comenta EU QUERO');
+  document.getElementById('root').innerHTML=brand('EP. 4')+h;
+}
+window.DUR=39;render(0);
+</script></body></html>
