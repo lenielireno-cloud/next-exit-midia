@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="root"></div>
+<script src="lib.js"></script><script src="CFGFILE"></script><script>
+// kind: vocab | usuk | frase
+function render(t){
+  let h=brand(CFG.tag);
+  if(CFG.kind==='frase'){
+    if(t<6.8){
+      h+=cap(t,0.1,CFG.hook,260,66);
+      h+=`<div class="abs" style="top:560px;text-align:center;font-size:200px;transform:scale(${pop(io(t,0.4,0.4))})">${CFG.e}</div>`;
+      h+=`<div class="card" style="top:900px;text-align:center;opacity:${io(t,2.2)};transform:scale(${pop(io(t,2.2,0.35))})"><div style="font:800 38px Brico;color:#5E6E67">🇧🇷 Em português</div><div style="font:800 76px/1.15 Brico;margin-top:10px">${CFG.pt}</div></div>`;
+    } else if(t<14.6){
+      h+=`<div class="card" style="top:300px;text-align:center"><div style="font:800 38px Brico;color:#5E6E67">🇧🇷 Em português</div><div style="font:800 76px/1.15 Brico;margin-top:10px">${CFG.pt}</div></div>`;
+      if(t<12.4){const k=Math.floor((t-6.8)/1.8),f=((t-6.8)%1.8)/1.8;h+=`<div class="abs" style="top:820px;text-align:center;font:900 300px Overpass;color:${R};transform:scale(${pop(f*2.2)});opacity:${1-C(0,1,(f-0.75)*4)}">${3-k}</div>`}
+      else h+=cap(t,12.4,'E a resposta é…',900,76);
+    } else if(t<20){
+      h+=`<div class="card" style="top:300px;text-align:center"><div style="font:800 38px Brico;color:#5E6E67">🇧🇷 Em português</div><div style="font:800 64px/1.15 Brico;margin-top:10px">${CFG.pt}</div></div>`;
+      const a=io(t,14.6,0.35);
+      h+=`<div class="card" style="top:680px;text-align:center;border:6px solid ${G};transform:scale(${pop(a)})"><div style="font:800 38px Brico;color:${G}">🇺🇸 Em inglês</div><div style="font:700 74px/1.2 Mono;color:${G};margin-top:10px">${CFG.en}</div></div>`;
+      h+=cap(t,16,`💡 ${CFG.ctx}`,1090,46,'#5E6E67');
+    } else h=endcard(t,20,'Acertou? Comenta aqui! 👇');
+  } else {
+    const items=CFG.items, step=1.9, s0=3.6, n=items.length, end=s0+n*step;
+    if(t<s0){
+      h+=cap(t,0.1,CFG.hook,300,72);
+      h+=cap(t,1.4,CFG.sub,700,56,G);
+    } else if(t<end){
+      const i=Math.floor((t-s0)/step), ts=s0+i*step, it=items[i];
+      h+=`<div class="abs big" style="top:200px;font-size:46px;color:#5E6E67">${CFG.title} · <span style="color:${G}">${i+1}/${n}</span></div>`;
+      h+=`<div class="abs" style="top:450px;text-align:center;font-size:230px;transform:scale(${pop(io(t,ts,0.3))})">${it[0]}</div>`;
+      if(CFG.kind==='vocab'){
+        h+=`<div class="abs big" style="top:800px;font-size:64px">${it[2]}</div>`;
+        const r=io(t,ts+0.9,0.25);
+        h+=`<div class="card" style="top:940px;text-align:center;opacity:${r};transform:scale(${pop(r)});border:6px solid ${G}"><div style="font:700 88px Mono;color:${G}">${it[1]}</div></div>`;
+      } else {
+        h+=`<div class="abs big" style="top:800px;font-size:60px">${it[3]}</div>`;
+        const r=io(t,ts+0.8,0.25);
+        h+=`<div style="position:absolute;left:80px;right:80px;top:940px;display:flex;gap:30px;opacity:${r};transform:scale(${pop(r)})">
+          <div class="card" style="position:static;flex:1;text-align:center"><div style="font:800 40px Brico">🇺🇸 EUA</div><div style="font:700 62px Mono;color:${G}">${it[1]}</div></div>
+          <div class="card" style="position:static;flex:1;text-align:center"><div style="font:800 40px Brico">🇬🇧 UK</div><div style="font:700 62px Mono;color:${R}">${it[2]}</div></div></div>`;
+      }
+      h+=`<div style="position:absolute;left:120px;right:120px;top:1300px;height:16px;background:#D7DFDB;border-radius:8px"><div style="width:${100*(t-s0)/(end-s0)}%;height:100%;background:${G};border-radius:8px"></div></div>`;
+    } else if(t<end+3.5){
+      h+=cap(t,end,CFG.out,420,68);
+    } else h=endcard(t,end+3.5,'Comenta quantas acertou! 👇');
+  }
+  document.getElementById('root').innerHTML=h;
+}
+window.DUR = CFG.kind==='frase' ? 24 : 3.6+CFG.items.length*1.9+3.5+3.6;
+render(0);
+</script></body></html>
